@@ -10,8 +10,18 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/zegoim/zego_server_assistant/token/go/src/token04"
 	"go.uber.org/zap"
+	"log"
+	"strconv"
 )
 
+func stringToUint32(input string) uint32 {
+	// First convert to uint64 to check for overflow
+	val, err := strconv.ParseUint(input, 10, 32)
+	if err != nil {
+		return 0
+	}
+	return uint32(val)
+}
 func (b *BaseApi) GetAuthToken(c *gin.Context) {
 
 	var r systemReq.ZEGO
@@ -20,11 +30,13 @@ func (b *BaseApi) GetAuthToken(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	var appId uint32 = 238914567                       // Zego派发的数字ID, 各个开发者的唯一标识
-	userId := r.UserId                                 // 用户 ID
-	serverSecret := "fa94dd0f974cf2e293728a526b028271" // 在获取 token 时进行 AES 加密的密钥
-	var effectiveTimeInSeconds int64 = 3600            // token 的有效时长，单位：秒
-	var payload string = ""                            // token业务认证扩展，基础鉴权token此处填空
+	var appId uint32 = stringToUint32(global.GVA_CONFIG.System.AppID) // Zego派发的数字ID, 各个开发者的唯一标识
+	log.Println(appId)
+	userId := r.UserId                                    // 用户 ID
+	serverSecret := global.GVA_CONFIG.System.ServerSecret // 在获取 token 时进行 AES 加密的密钥
+	log.Println(serverSecret)
+	var effectiveTimeInSeconds int64 = 3600 // token 的有效时长，单位：秒
+	var payload string = ""                 // token业务认证扩展，基础鉴权token此处填空
 	//生成token
 	token, err := token04.GenerateToken04(appId, userId, serverSecret, effectiveTimeInSeconds, payload)
 	if err != nil {
@@ -51,11 +63,11 @@ func (b *BaseApi) GetPermissionToken(c *gin.Context) {
 		return
 	}
 
-	var appId uint32 = 238914567                       // Zego派发的数字ID, 各个开发者的唯一标识
-	roomId := r.Roomid                                 // 房间 ID
-	userId := r.UserId                                 // 用户 ID
-	serverSecret := "0f9632b53ff717617bdb33989b633bc4" // 在获取 token 时进行 AES 加密的密钥
-	var effectiveTimeInSeconds int64 = 3600            // token 的有效时长，单位：秒
+	var appId uint32 = stringToUint32(global.GVA_CONFIG.System.AppID) // Zego派发的数字ID, 各个开发者的唯一标识
+	roomId := r.Roomid                                                // 房间 ID
+	userId := r.UserId                                                // 用户 ID
+	serverSecret := global.GVA_CONFIG.System.ServerSecret             // 在获取 token 时进行 AES 加密的密钥
+	var effectiveTimeInSeconds int64 = 3600                           // token 的有效时长，单位：秒
 	//请参考 github.com/zegoim/zego_server_assistant/token/go/src/token04/token04.go 定义
 	////权限位定义
 	//const (
