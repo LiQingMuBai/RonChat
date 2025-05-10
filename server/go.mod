@@ -37,6 +37,7 @@ require (
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.60
 	github.com/unrolled/secure v1.17.0
 	github.com/xuri/excelize/v2 v2.9.0
+	github.com/zegoim/zego_server_assistant/token/go/src v0.0.0-20241211111548-fd849fbe31c1
 	go.mongodb.org/mongo-driver v1.17.2
 	go.uber.org/automaxprocs v1.6.0
 	go.uber.org/zap v1.27.0
