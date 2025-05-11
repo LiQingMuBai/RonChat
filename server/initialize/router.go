@@ -75,6 +75,8 @@ func Routers() *gin.Engine {
 		systemRouter.InitBaseRouter(PublicGroup)     // 注册基础功能路由 不做鉴权
 		systemRouter.InitBaseZEGORouter(PublicGroup) // 注册基础功能路由 不做鉴权
 		systemRouter.InitInitRouter(PublicGroup)     // 自动初始化相关
+
+		systemRouter.InitRonUsersRouter(PublicGroup)
 	}
 
 	{
@@ -103,7 +105,7 @@ func Routers() *gin.Engine {
 	InstallPlugin(PrivateGroup, PublicGroup, Router)
 
 	// 注册业务路由
-	initBizRouter(PrivateGroup, PublicGroup)
+	//initBizRouter(PrivateGroup, PublicGroup)
 
 	global.GVA_ROUTERS = Router.Routes()
 
