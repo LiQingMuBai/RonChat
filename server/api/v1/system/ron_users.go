@@ -135,6 +135,29 @@ func (ronUsersApi *RonUsersApi) FindRonUsers(c *gin.Context) {
 	response.OkWithData(reronUsers, c)
 }
 
+// FindRonUsers 用id查询ronUsers表
+// @Tags RonUsers
+// @Summary 用id查询ronUsers表
+// @Security ApiKeyAuth
+// @Accept application/json
+// @Produce application/json
+// @Param id query int true "用id查询ronUsers表"
+// @Success 200 {object} response.Response{data=system.RonUsers,msg=string} "查询成功"
+// @Router /ronUsers/findRonUsers [get]
+func (ronUsersApi *RonUsersApi) FindRonUserByTG(c *gin.Context) {
+	// 创建业务用Context
+	ctx := c.Request.Context()
+
+	id := c.Query("telegram")
+	reronUsers, err := ronUsersService.GetRonUserByTG(ctx, id)
+	if err != nil {
+		global.GVA_LOG.Error("查询失败!", zap.Error(err))
+		response.FailWithMessage("查询失败:"+err.Error(), c)
+		return
+	}
+	response.OkWithData(reronUsers, c)
+}
+
 // GetRonUsersList 分页获取ronUsers表列表
 // @Tags RonUsers
 // @Summary 分页获取ronUsers表列表

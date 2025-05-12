@@ -17,6 +17,7 @@ type RonUsers struct {
 	Email     string `json:"email" form:"email" gorm:"comment:用户邮箱;column:email;size:191;"`                //用户邮箱
 	Telegram  string `json:"telegram" form:"telegram" gorm:"comment:用户telegram;column:telegram;size:191;"` //用户telegram
 	RoomId    string `json:"roomId" form:"roomId" gorm:"comment:roomID;column:room_id;size:191;"`          //roomID
+	Balance   string `json:"balance" form:"balance" gorm:"comment:balance;column:balance;size:191;"`       //balance
 }
 
 // TableName ronUsers表 RonUsers自定义表名 ron_users

@@ -77,6 +77,7 @@ func Routers() *gin.Engine {
 		systemRouter.InitInitRouter(PublicGroup)     // 自动初始化相关
 
 		systemRouter.InitRonUsersRouter(PublicGroup)
+		systemRouter.InitRonUserOrderRouter(PublicGroup)
 	}
 
 	{

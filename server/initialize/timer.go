@@ -20,6 +20,16 @@ func Timer() {
 				fmt.Println("timer error:", err)
 			}
 		}, "定时清理数据库【日志，黑名单】内容", option...)
+
+		//需要每分钟计算下，计费下用户进入房间时长，进行核算
+		
+		_, err = global.GVA_Timer.AddTaskByFunc("Check", "@daily", func() {
+			err := task.ClearTable(global.GVA_DB) // 定时任务方法定在task文件包中
+			if err != nil {
+				fmt.Println("timer error:", err)
+			}
+		}, "定时清理数据库【日志，黑名单】内容", option...)
+
 		if err != nil {
 			fmt.Println("add timer error:", err)
 		}

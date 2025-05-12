@@ -44,6 +44,13 @@ func (ronUsersService *RonUsersService) GetRonUsers(ctx context.Context, id stri
 	return
 }
 
+// GetRonUsers 根据id获取ronUsers表记录
+// Author [yourname](https://github.com/yourname)
+func (ronUsersService *RonUsersService) GetRonUserByTG(ctx context.Context, telegram string) (ronUsers system.RonUsers, err error) {
+	err = global.GVA_DB.Where("telegram = ?", telegram).First(&ronUsers).Error
+	return
+}
+
 // GetRonUsersInfoList 分页获取ronUsers表记录
 // Author [yourname](https://github.com/yourname)
 func (ronUsersService *RonUsersService) GetRonUsersInfoList(ctx context.Context, info systemReq.RonUsersSearch) (list []system.RonUsers, total int64, err error) {

@@ -20,6 +20,7 @@ type RouterGroup struct {
 	SysExportTemplateRouter
 	SysParamsRouter
 	RonUsersRouter
+	RonUserOrderRouter
 }
 
 var (
@@ -43,4 +44,5 @@ var (
 	autoCodeTemplateApi = api.ApiGroupApp.SystemApiGroup.AutoCodeTemplateApi
 	exportTemplateApi   = api.ApiGroupApp.SystemApiGroup.SysExportTemplateApi
 	ronUsersApi         = api.ApiGroupApp.SystemApiGroup.RonUsersApi
+	ronUserOrderApi     = api.ApiGroupApp.SystemApiGroup.RonUserOrderApi
 )

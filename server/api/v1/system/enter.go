@@ -23,6 +23,7 @@ type ApiGroup struct {
 	AutoCodeTemplateApi
 	SysParamsApi
 	RonUsersApi
+	RonUserOrderApi
 }
 
 var (
@@ -46,4 +47,5 @@ var (
 	autoCodeHistoryService  = service.ServiceGroupApp.SystemServiceGroup.AutoCodeHistory
 	autoCodeTemplateService = service.ServiceGroupApp.SystemServiceGroup.AutoCodeTemplate
 	ronUsersService         = service.ServiceGroupApp.SystemServiceGroup.RonUsersService
+	ronUserOrderService     = service.ServiceGroupApp.SystemServiceGroup.RonUserOrderService
 )
