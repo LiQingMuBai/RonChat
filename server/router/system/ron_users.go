@@ -20,8 +20,8 @@ func (s *RonUsersRouter) InitRonUsersRouter(PublicRouter *gin.RouterGroup) {
 		ronUsersRouterWithoutAuth.GET("getRonUsersList", ronUsersApi.GetRonUsersList)            // 获取ronUsers表列表
 		ronUsersRouterWithoutAuth.GET("getRonUsersPublic", ronUsersApi.GetRonUsersPublic)        // ronUsers表开放接口
 
-		ronUsersRouterWithoutAuth.GET("enterRoom", ronUsersApi.UpdateRonUsers) // 进入房间
-		ronUsersRouterWithoutAuth.GET("exitRoom", ronUsersApi.UpdateRonUsers)  // 退出房间
+		ronUsersRouterWithoutAuth.PUT("enterRoom", ronUsersApi.UpdateRonUsers) // 进入房间
+		ronUsersRouterWithoutAuth.PUT("exitRoom", ronUsersApi.UpdateRonUsers)  // 退出房间
 
 	}
 }
