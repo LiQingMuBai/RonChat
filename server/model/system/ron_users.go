@@ -18,6 +18,7 @@ type RonUsers struct {
 	Telegram  string `json:"telegram" form:"telegram" gorm:"comment:用户telegram;column:telegram;size:191;"` //用户telegram
 	RoomId    string `json:"roomId" form:"roomId" gorm:"comment:roomID;column:room_id;size:191;"`          //roomID
 	Balance   string `json:"balance" form:"balance" gorm:"comment:balance;column:balance;size:191;"`       //balance
+	Anchor    int    `json:"anchor" form:"anchor" gorm:"comment: 1主播 0非主播;column:anchor;size:19;"`         // 1主播 0非主播
 }
 
 // TableName ronUsers表 RonUsers自定义表名 ron_users
