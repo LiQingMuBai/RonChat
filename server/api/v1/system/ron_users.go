@@ -7,6 +7,8 @@ import (
 	systemReq "github.com/flipped-aurora/gin-vue-admin/server/model/system/request"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"math/rand"
+	"strconv"
 )
 
 type RonUsersApi struct{}
@@ -158,6 +160,29 @@ func (ronUsersApi *RonUsersApi) FindRonUserByTG(c *gin.Context) {
 	response.OkWithData(reronUsers, c)
 }
 
+func (ronUsersApi *RonUsersApi) GetLuckyGuy(c *gin.Context) {
+	// 创建业务用Context
+	ctx := c.Request.Context()
+
+	sex := c.Query("sex")
+
+	isMale, err := strconv.Atoi(sex)
+
+	if err != nil {
+		isMale = 0
+	}
+
+	ronUsers, max, err := ronUsersService.GetRonUsersPublic(ctx, isMale)
+	
+	if err != nil {
+		global.GVA_LOG.Error("查询失败!", zap.Error(err))
+		response.FailWithMessage("查询失败:"+err.Error(), c)
+		return
+	}
+	randomNum := rand.Intn(int(max-0)) + 0
+	response.OkWithData(ronUsers[randomNum], c)
+}
+
 // GetRonUsersList 分页获取ronUsers表列表
 // @Tags RonUsers
 // @Summary 分页获取ronUsers表列表
@@ -204,7 +229,7 @@ func (ronUsersApi *RonUsersApi) GetRonUsersPublic(c *gin.Context) {
 
 	// 此接口不需要鉴权
 	// 示例为返回了一个固定的消息接口，一般本接口用于C端服务，需要自己实现业务逻辑
-	ronUsersService.GetRonUsersPublic(ctx)
+	ronUsersService.GetRonUsersPublic(ctx, 1)
 	response.OkWithDetailed(gin.H{
 		"info": "不需要鉴权的ronUsers表接口信息",
 	}, "获取成功", c)

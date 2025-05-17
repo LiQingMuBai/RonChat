@@ -73,7 +73,17 @@ func (ronUsersService *RonUsersService) GetRonUsersInfoList(ctx context.Context,
 	err = db.Find(&ronUserss).Error
 	return ronUserss, total, err
 }
-func (ronUsersService *RonUsersService) GetRonUsersPublic(ctx context.Context) {
-	// 此方法为获取数据源定义的数据
-	// 请自行实现
+func (ronUsersService *RonUsersService) GetRonUsersPublic(ctx context.Context, _sex int) (list []system.RonUsers, total int64, err error) {
+	db := global.GVA_DB.Model(&system.RonUsers{})
+	var ronUserss []system.RonUsers
+	// 如果有条件搜索 下方会自动创建搜索语句
+
+	db.Where("sex", _sex)
+	err = db.Count(&total).Error
+	if err != nil {
+		return
+	}
+
+	err = db.Find(&ronUserss).Error
+	return ronUserss, total, err
 }
