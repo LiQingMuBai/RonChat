@@ -79,7 +79,7 @@ func (ronUsersService *RonUsersService) GetRonUsersPublic(ctx context.Context, _
 	// 如果有条件搜索 下方会自动创建搜索语句
 
 	db.Where("sex", _sex)
-	db.Where("enable", 1)
+	db.Where("enable", 0)
 	err = db.Count(&total).Error
 	if err != nil {
 		return

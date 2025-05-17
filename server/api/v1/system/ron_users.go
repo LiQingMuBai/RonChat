@@ -7,6 +7,7 @@ import (
 	systemReq "github.com/flipped-aurora/gin-vue-admin/server/model/system/request"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"log"
 	"math/rand"
 	"strconv"
 )
@@ -173,10 +174,17 @@ func (ronUsersApi *RonUsersApi) GetLuckyGuy(c *gin.Context) {
 	}
 
 	ronUsers, max, err := ronUsersService.GetRonUsersPublic(ctx, isMale)
-	
+
+	log.Println(max)
 	if err != nil {
 		global.GVA_LOG.Error("查询失败!", zap.Error(err))
 		response.FailWithMessage("查询失败:"+err.Error(), c)
+		return
+	}
+
+	if max <= 1 {
+		global.GVA_LOG.Error("当前用户缺少!", zap.Error(err))
+		response.FailWithMessage("当前用户缺少:"+err.Error(), c)
 		return
 	}
 	randomNum := rand.Intn(int(max-0)) + 0

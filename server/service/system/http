@@ -1,0 +1,18 @@
+### Send POST request with json body
+POST https://examples.http-client.intellij.net/post
+Content-Type: application/json
+
+{
+  "id": 999,
+  "value": "content"
+}
+
+
+### GET request with a header
+GET http://107.189.19.170:8888/ronUsers/findRonUserByTG?telegram=123
+Accept: application/json
+
+
+
+### GET request with a header
+GET http://107.189.19.170:8888/ronUsers/getLuckyGuy?sex=1
