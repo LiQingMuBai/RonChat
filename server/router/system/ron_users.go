@@ -19,7 +19,7 @@ func (s *RonUsersRouter) InitRonUsersRouter(PublicRouter *gin.RouterGroup) {
 		ronUsersRouterWithoutAuth.GET("findRonUserByTG", ronUsersApi.FindRonUserByTG)            // 根据ID获取ronUsers表
 		ronUsersRouterWithoutAuth.GET("getLuckyGuy", ronUsersApi.GetLuckyGuy)                    // 获取ronUsers表列表
 		ronUsersRouterWithoutAuth.GET("getRonUsersList", ronUsersApi.GetRonUsersList)            // 获取ronUsers表列表
-		ronUsersRouterWithoutAuth.GET("getRonUsersPublic", ronUsersApi.GetRonUsersPublic)        // ronUsers表开放接口
+		//ronUsersRouterWithoutAuth.GET("getRonUsersPublic", ronUsersApi.GetRonUsersPublic)        // ronUsers表开放接口
 
 		ronUsersRouterWithoutAuth.PUT("createRoom", ronUsersApi.UpdateRonUsers) // 进入房间
 		ronUsersRouterWithoutAuth.PUT("enterRoom", ronUsersApi.UpdateRonUsers)  // 进入房间
