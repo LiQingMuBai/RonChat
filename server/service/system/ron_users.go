@@ -73,13 +73,14 @@ func (ronUsersService *RonUsersService) GetRonUsersInfoList(ctx context.Context,
 	err = db.Find(&ronUserss).Error
 	return ronUserss, total, err
 }
-func (ronUsersService *RonUsersService) GetRonUsersPublic(ctx context.Context, _sex int) (list []system.RonUsers, total int64, err error) {
+func (ronUsersService *RonUsersService) GetRonUsersPublic(ctx context.Context, _sex int, _uid uint) (list []system.RonUsers, total int64, err error) {
 	db := global.GVA_DB.Model(&system.RonUsers{})
 	var ronUserss []system.RonUsers
 	// 如果有条件搜索 下方会自动创建搜索语句
 
-	db.Where("sex", _sex)
-	db.Where("enable", 0)
+	db.Where("sex = ?", _sex)
+	db.Where("enable = ?", 0)
+	db.Where("uid != ?", _uid)
 	err = db.Count(&total).Error
 	if err != nil {
 		return

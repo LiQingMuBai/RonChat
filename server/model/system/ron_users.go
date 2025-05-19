@@ -9,6 +9,7 @@ import (
 type RonUsers struct {
 	global.GVA_MODEL
 	Username  string `json:"username" form:"username" gorm:"comment:用户登录名;column:username;size:191;"`      //用户登录名
+	Uid       string `json:"uid" form:"uid" gorm:"comment:用户登录名;column:uid;size:191;"`                     //用户登录名
 	Password  string `json:"password" form:"password" gorm:"comment:用户登录密码;column:password;size:191;"`     //用户登录密码
 	Sex       int    `json:"sex" form:"sex" gorm:"comment:男女 1男 0女;column:sex;size:19;"`                   //男女 1男 0女
 	Enable    int    `json:"enable" form:"enable" gorm:"comment:用户是否被冻结 1正常 2冻结;column:enable;size:19;"`   //用户是否被冻结 1正常 2冻结

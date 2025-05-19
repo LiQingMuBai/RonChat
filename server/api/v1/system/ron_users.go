@@ -5,6 +5,7 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/model/common/response"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/system"
 	systemReq "github.com/flipped-aurora/gin-vue-admin/server/model/system/request"
+	"github.com/flipped-aurora/gin-vue-admin/server/utils"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"log"
@@ -172,13 +173,14 @@ func (ronUsersApi *RonUsersApi) GetLuckyGuy(c *gin.Context) {
 	if err != nil {
 		isMale = 0
 	}
+	uid := utils.GetUserID(c)
 
-	ronUsers, max, err := ronUsersService.GetRonUsersPublic(ctx, isMale)
+	ronUsers, max, err := ronUsersService.GetRonUsersPublic(ctx, isMale, uid)
 
 	log.Println(max)
 	if err != nil {
-		global.GVA_LOG.Error("查询失败!", zap.Error(err))
-		response.FailWithMessage("查询失败:"+err.Error(), c)
+		global.GVA_LOG.Error("当前用户缺少!", zap.Error(err))
+		response.FailWithMessage("当前用户缺少:"+err.Error(), c)
 		return
 	}
 
@@ -224,21 +226,21 @@ func (ronUsersApi *RonUsersApi) GetRonUsersList(c *gin.Context) {
 	}, "获取成功", c)
 }
 
-// GetRonUsersPublic 不需要鉴权的ronUsers表接口
-// @Tags RonUsers
-// @Summary 不需要鉴权的ronUsers表接口
-// @Accept application/json
-// @Produce application/json
-// @Success 200 {object} response.Response{data=object,msg=string} "获取成功"
-// @Router /ronUsers/getRonUsersPublic [get]
-func (ronUsersApi *RonUsersApi) GetRonUsersPublic(c *gin.Context) {
-	// 创建业务用Context
-	ctx := c.Request.Context()
-
-	// 此接口不需要鉴权
-	// 示例为返回了一个固定的消息接口，一般本接口用于C端服务，需要自己实现业务逻辑
-	ronUsersService.GetRonUsersPublic(ctx, 1)
-	response.OkWithDetailed(gin.H{
-		"info": "不需要鉴权的ronUsers表接口信息",
-	}, "获取成功", c)
-}
+//// GetRonUsersPublic 不需要鉴权的ronUsers表接口
+//// @Tags RonUsers
+//// @Summary 不需要鉴权的ronUsers表接口
+//// @Accept application/json
+//// @Produce application/json
+//// @Success 200 {object} response.Response{data=object,msg=string} "获取成功"
+//// @Router /ronUsers/getRonUsersPublic [get]
+//func (ronUsersApi *RonUsersApi) GetRonUsersPublic(c *gin.Context) {
+//	// 创建业务用Context
+//	ctx := c.Request.Context()
+//
+//	// 此接口不需要鉴权
+//	// 示例为返回了一个固定的消息接口，一般本接口用于C端服务，需要自己实现业务逻辑
+//	ronUsersService.GetRonUsersPublic(ctx, 1,1)
+//	response.OkWithDetailed(gin.H{
+//		"info": "不需要鉴权的ronUsers表接口信息",
+//	}, "获取成功", c)
+//}

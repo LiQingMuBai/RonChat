@@ -1,6 +1,7 @@
 package system
 
 import (
+	"log"
 	"strconv"
 	"time"
 
@@ -153,6 +154,10 @@ func (b *BaseApi) Register(c *gin.Context) {
 		})
 	}
 	user := &system.SysUser{Username: r.Username, NickName: r.NickName, Password: r.Password, HeaderImg: r.HeaderImg, AuthorityId: r.AuthorityId, Authorities: authorities, Enable: r.Enable, Phone: r.Phone, Email: r.Email}
+
+	log.Println("=================================")
+	log.Println(user)
+	log.Println("=================================")
 	userReturn, err := userService.Register(*user)
 	if err != nil {
 		global.GVA_LOG.Error("注册失败!", zap.Error(err))

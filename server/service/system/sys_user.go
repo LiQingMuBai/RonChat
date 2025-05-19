@@ -290,6 +290,11 @@ func (userService *UserService) FindUserById(id int) (user *system.SysUser, err 
 	err = global.GVA_DB.Where("id = ?", id).First(&u).Error
 	return &u, err
 }
+func (userService *UserService) FindUserBy3rdID(_username string) (user *system.SysUser, err error) {
+	var u system.SysUser
+	err = global.GVA_DB.Where("username = ?", _username).First(&u).Error
+	return &u, err
+}
 
 //@author: [SliverHorn](https://github.com/SliverHorn)
 //@function: FindUserByUuid

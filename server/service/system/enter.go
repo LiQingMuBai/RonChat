@@ -23,4 +23,5 @@ type ServiceGroup struct {
 	AutoCodeTemplate autoCodeTemplate
 	RonUsersService
 	RonUserOrderService
+	RonOperatingActivityService
 }

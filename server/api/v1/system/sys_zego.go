@@ -5,14 +5,48 @@ import (
 	"fmt"
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/common/response"
+	"github.com/flipped-aurora/gin-vue-admin/server/model/system"
 	systemReq "github.com/flipped-aurora/gin-vue-admin/server/model/system/request"
 	systemRes "github.com/flipped-aurora/gin-vue-admin/server/model/system/response"
+	"github.com/flipped-aurora/gin-vue-admin/server/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/zegoim/zego_server_assistant/token/go/src/token04"
 	"go.uber.org/zap"
 	"log"
 	"strconv"
 )
+
+func (b *BaseApi) LoginRon(c *gin.Context) {
+	var l systemReq.Login
+	err := c.ShouldBindJSON(&l)
+
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
+	user, err := userService.FindUserBy3rdID(l.Username)
+	if err != nil {
+		user := &system.SysUser{
+			Username:    l.Username,
+			NickName:    l.Username,
+			Password:    "123456",
+			AuthorityId: 999, Enable: 1}
+		newUser, _ := userService.Register(*user)
+		b.TokenNext(c, newUser)
+		return
+	} else {
+		if user.Enable != 1 {
+			global.GVA_LOG.Error("登陆失败! 用户被禁止登录!")
+
+			response.FailWithMessage("用户被禁止登录", c)
+			return
+		}
+	}
+	b.TokenNext(c, *user)
+	return
+
+}
 
 func stringToUint32(input string) uint32 {
 	// First convert to uint64 to check for overflow
@@ -24,6 +58,7 @@ func stringToUint32(input string) uint32 {
 }
 func (b *BaseApi) GetAuthToken(c *gin.Context) {
 
+	uid := utils.GetUserID(c)
 	var r systemReq.ZEGO
 	err := c.ShouldBindJSON(&r)
 	if err != nil {
@@ -32,7 +67,10 @@ func (b *BaseApi) GetAuthToken(c *gin.Context) {
 	}
 	var appId uint32 = stringToUint32(global.GVA_CONFIG.System.AppID) // Zego派发的数字ID, 各个开发者的唯一标识
 	log.Println(appId)
-	userId := r.UserId                                    // 用户 ID
+	userId := fmt.Sprintf("%d", uid)
+
+	log.Println("userId:", userId)
+	// 用户 ID
 	serverSecret := global.GVA_CONFIG.System.ServerSecret // 在获取 token 时进行 AES 加密的密钥
 	log.Println(serverSecret)
 	var effectiveTimeInSeconds int64 = 3600 // token 的有效时长，单位：秒
@@ -55,7 +93,7 @@ func (b *BaseApi) GetAuthToken(c *gin.Context) {
 	}, "验证Token获取成功", c)
 }
 func (b *BaseApi) GetPermissionToken(c *gin.Context) {
-
+	uid := utils.GetUserID(c)
 	var r systemReq.ZEGO
 	err := c.ShouldBindJSON(&r)
 	if err != nil {
@@ -65,7 +103,7 @@ func (b *BaseApi) GetPermissionToken(c *gin.Context) {
 
 	var appId uint32 = stringToUint32(global.GVA_CONFIG.System.AppID) // Zego派发的数字ID, 各个开发者的唯一标识
 	roomId := r.Roomid                                                // 房间 ID
-	userId := r.UserId                                                // 用户 ID
+	userId := fmt.Sprintf("%d", uid)                                  // 用户 ID
 	serverSecret := global.GVA_CONFIG.System.ServerSecret             // 在获取 token 时进行 AES 加密的密钥
 	var effectiveTimeInSeconds int64 = 3600                           // token 的有效时长，单位：秒
 	//请参考 github.com/zegoim/zego_server_assistant/token/go/src/token04/token04.go 定义
