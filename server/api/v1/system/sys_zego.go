@@ -33,6 +33,20 @@ func (b *BaseApi) LoginRon(c *gin.Context) {
 			Password:    "123456",
 			AuthorityId: 999, Enable: 1}
 		newUser, _ := userService.Register(*user)
+
+		var ronUser system.RonUsers
+		ronUser.Uid = newUser.ID
+		ronUser.Username = l.Username
+		ronUser.Telegram = l.Username
+		ronUser.Enable = 0
+
+		err = ronUsersService.CreateRonUsers(c, &ronUser)
+		if err != nil {
+			global.GVA_LOG.Error("登陆失败! 用户被禁止登录!")
+			response.FailWithMessage("用户被禁止登录", c)
+			return
+		}
+
 		b.TokenNext(c, newUser)
 		return
 	} else {
