@@ -15,6 +15,7 @@ type Response struct {
 const (
 	ERROR   = 7
 	SUCCESS = 0
+	CODE    = 100
 )
 
 func Result(code int, data interface{}, msg string, c *gin.Context) {
@@ -24,6 +25,10 @@ func Result(code int, data interface{}, msg string, c *gin.Context) {
 		data,
 		msg,
 	})
+}
+
+func OkWithCode(c *gin.Context) {
+	Result(CODE, map[string]interface{}{}, "操作成功", c)
 }
 
 func Ok(c *gin.Context) {

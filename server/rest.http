@@ -1,0 +1,90 @@
+### GET request with parameter
+POST http://107.189.19.170:8888/zego/login
+Accept: application/json
+
+{
+  "username": "steven001"
+}
+
+
+
+### Send POST request with json body
+POST http://localhost:8888/zego/getAuthToken
+Content-Type: application/json
+X-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVVUlEIjoiNTcwMDhhNzAtMmU1Ni00MzU0LTljY2YtYjg1OWFiZjBiMzkxIiwiSUQiOjEsIlVzZXJuYW1lIjoiYWRtaW4iLCJOaWNrTmFtZSI6IlRKIiwiQXV0aG9yaXR5SWQiOjg4OCwiQnVmZmVyVGltZSI6ODY0MDAsImlzcyI6InFtUGx1cyIsImF1ZCI6WyJHVkEiXSwiZXhwIjoxNzQ4Mjc2NDkyLCJuYmYiOjE3NDc2NzE2OTJ9.D_T7VcEz_hShavJDNm3WLxg_8r_OljIsP7Kgo48EYDI
+
+{
+  "userId": "12"
+}
+
+
+
+### Send POST request with json body
+POST http://localhost:8888/zego/getPermissionToken
+Content-Type: application/json
+X-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVVUlEIjoiNTcwMDhhNzAtMmU1Ni00MzU0LTljY2YtYjg1OWFiZjBiMzkxIiwiSUQiOjEsIlVzZXJuYW1lIjoiYWRtaW4iLCJOaWNrTmFtZSI6IlRKIiwiQXV0aG9yaXR5SWQiOjg4OCwiQnVmZmVyVGltZSI6ODY0MDAsImlzcyI6InFtUGx1cyIsImF1ZCI6WyJHVkEiXSwiZXhwIjoxNzQ4Mjc2NDkyLCJuYmYiOjE3NDc2NzE2OTJ9.D_T7VcEz_hShavJDNm3WLxg_8r_OljIsP7Kgo48EYDI
+
+{
+  "userId": "12",
+  "roomid": "12"
+}
+
+
+
+
+### Send POST request with json body
+GET http://localhost:8888/ronOperatingActivity/getRonOperatingActivityList
+Content-Type: application/json
+X-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVVUlEIjoiNTcwMDhhNzAtMmU1Ni00MzU0LTljY2YtYjg1OWFiZjBiMzkxIiwiSUQiOjEsIlVzZXJuYW1lIjoiYWRtaW4iLCJOaWNrTmFtZSI6IlRKIiwiQXV0aG9yaXR5SWQiOjg4OCwiQnVmZmVyVGltZSI6ODY0MDAsImlzcyI6InFtUGx1cyIsImF1ZCI6WyJHVkEiXSwiZXhwIjoxNzQ4Mjc2NDkyLCJuYmYiOjE3NDc2NzE2OTJ9.D_T7VcEz_hShavJDNm3WLxg_8r_OljIsP7Kgo48EYDI
+
+{
+  "page": 1,
+  "pageSize": 11
+}
+
+
+### Send POST request with json body
+GET http://107.189.19.170:8888/ronUsers/getLuckyGuy
+Content-Type: application/json
+X-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVVUlEIjoiNTcwMDhhNzAtMmU1Ni00MzU0LTljY2YtYjg1OWFiZjBiMzkxIiwiSUQiOjEsIlVzZXJuYW1lIjoiYWRtaW4iLCJOaWNrTmFtZSI6IlRKIiwiQXV0aG9yaXR5SWQiOjg4OCwiQnVmZmVyVGltZSI6ODY0MDAsImlzcyI6InFtUGx1cyIsImF1ZCI6WyJHVkEiXSwiZXhwIjoxNzQ4Mjc2NDkyLCJuYmYiOjE3NDc2NzE2OTJ9.D_T7VcEz_hShavJDNm3WLxg_8r_OljIsP7Kgo48EYDI
+
+{
+  "sex": 1
+}
+
+### Send POST request with json body
+GET http://localhost:8888/ronUsers/getLuckyGuy
+Content-Type: application/json
+X-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVVUlEIjoiNTcwMDhhNzAtMmU1Ni00MzU0LTljY2YtYjg1OWFiZjBiMzkxIiwiSUQiOjEsIlVzZXJuYW1lIjoiYWRtaW4iLCJOaWNrTmFtZSI6IlRKIiwiQXV0aG9yaXR5SWQiOjg4OCwiQnVmZmVyVGltZSI6ODY0MDAsImlzcyI6InFtUGx1cyIsImF1ZCI6WyJHVkEiXSwiZXhwIjoxNzQ4Mjc2NDkyLCJuYmYiOjE3NDc2NzE2OTJ9.D_T7VcEz_hShavJDNm3WLxg_8r_OljIsP7Kgo48EYDI
+
+{
+  "sex": 1
+}
+
+
+### Send POST request with json body
+PUT http://localhost:8888/ronUsers/createRoom
+Content-Type: application/json
+X-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVVUlEIjoiNTcwMDhhNzAtMmU1Ni00MzU0LTljY2YtYjg1OWFiZjBiMzkxIiwiSUQiOjEsIlVzZXJuYW1lIjoiYWRtaW4iLCJOaWNrTmFtZSI6IlRKIiwiQXV0aG9yaXR5SWQiOjg4OCwiQnVmZmVyVGltZSI6ODY0MDAsImlzcyI6InFtUGx1cyIsImF1ZCI6WyJHVkEiXSwiZXhwIjoxNzQ4Mjc2NDkyLCJuYmYiOjE3NDc2NzE2OTJ9.D_T7VcEz_hShavJDNm3WLxg_8r_OljIsP7Kgo48EYDI
+
+{
+  "roomId": 123
+}
+
+### Send POST request with json body
+PUT http://localhost:8888/ronUsers/enterRoom
+Content-Type: application/json
+X-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVVUlEIjoiNTcwMDhhNzAtMmU1Ni00MzU0LTljY2YtYjg1OWFiZjBiMzkxIiwiSUQiOjEsIlVzZXJuYW1lIjoiYWRtaW4iLCJOaWNrTmFtZSI6IlRKIiwiQXV0aG9yaXR5SWQiOjg4OCwiQnVmZmVyVGltZSI6ODY0MDAsImlzcyI6InFtUGx1cyIsImF1ZCI6WyJHVkEiXSwiZXhwIjoxNzQ4Mjc2NDkyLCJuYmYiOjE3NDc2NzE2OTJ9.D_T7VcEz_hShavJDNm3WLxg_8r_OljIsP7Kgo48EYDI
+
+{
+  "roomId": 123
+}
+
+### Send POST request with json body
+PUT http://localhost:8888/ronUsers/exitRoom
+Content-Type: application/json
+X-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVVUlEIjoiNTcwMDhhNzAtMmU1Ni00MzU0LTljY2YtYjg1OWFiZjBiMzkxIiwiSUQiOjEsIlVzZXJuYW1lIjoiYWRtaW4iLCJOaWNrTmFtZSI6IlRKIiwiQXV0aG9yaXR5SWQiOjg4OCwiQnVmZmVyVGltZSI6ODY0MDAsImlzcyI6InFtUGx1cyIsImF1ZCI6WyJHVkEiXSwiZXhwIjoxNzQ4Mjc2NDkyLCJuYmYiOjE3NDc2NzE2OTJ9.D_T7VcEz_hShavJDNm3WLxg_8r_OljIsP7Kgo48EYDI
+
+
+
+

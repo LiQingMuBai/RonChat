@@ -174,20 +174,21 @@ func (ronUsersApi *RonUsersApi) GetLuckyGuy(c *gin.Context) {
 		isMale = 0
 	}
 	uid := utils.GetUserID(c)
+	log.Println("uid : ", uid)
+	log.Println("isMale : ", isMale)
 
 	ronUsers, max, err := ronUsersService.GetRonUsersPublic(ctx, isMale, uid)
 
-	log.Println(max)
+	log.Println("max :  ", max)
 	if err != nil {
 		global.GVA_LOG.Error("当前用户缺少!", zap.Error(err))
 		response.FailWithMessage("当前用户缺少:"+err.Error(), c)
 		return
 	}
-
+	
 	if max <= 1 {
 		global.GVA_LOG.Error("当前用户缺少!", zap.Error(err))
-		response.FailWithMessage("当前用户缺少:"+err.Error(), c)
-		return
+		response.OkWithCode(c)
 	}
 	randomNum := rand.Intn(int(max-0)) + 0
 	response.OkWithData(ronUsers[randomNum], c)
