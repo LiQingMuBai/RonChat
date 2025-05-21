@@ -15,7 +15,8 @@ type RonUserOrder struct {
 	Status    int       `json:"status" form:"status" gorm:"comment:0 过程中 1 成功 2失败;column:status;size:19;"` //0 过程中 1 成功 2失败
 	Amount    string    `json:"amount" form:"amount" gorm:"comment:充值金额;column:amount;size:191;"`             //充值金额
 	Channel   string    `json:"channel" form:"channel" gorm:"comment:充值通道;column:channel;size:191;"`          //充值通道
-	OrderId   string    `json:"order_id" form:"channel" gorm:"comment:订单id;column:channel;size:191;"`           //订单id
+	OrderId   string    `json:"order_id" form:"order_id" gorm:"comment:订单id;column:order_id;size:191;"`         //订单id
+	Uid       uint      `json:"uid" form:"uid" gorm:"comment:订单id;column:uid;size:191;"`                        //订单id
 }
 
 // TableName ronUserOrder表 RonUserOrder自定义表名 ron_user_order
