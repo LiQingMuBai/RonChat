@@ -67,14 +67,6 @@ func (b *BaseApi) LoginRon(c *gin.Context) {
 
 }
 
-func stringToUint32(input string) uint32 {
-	// First convert to uint64 to check for overflow
-	val, err := strconv.ParseUint(input, 10, 32)
-	if err != nil {
-		return 0
-	}
-	return uint32(val)
-}
 func (b *BaseApi) GetAuthToken(c *gin.Context) {
 
 	uid := utils.GetUserID(c)
@@ -84,7 +76,7 @@ func (b *BaseApi) GetAuthToken(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	var appId uint32 = stringToUint32(global.GVA_CONFIG.System.AppID) // Zego派发的数字ID, 各个开发者的唯一标识
+	var appId uint32 = utils.StringToUint32(global.GVA_CONFIG.System.AppID) // Zego派发的数字ID, 各个开发者的唯一标识
 	log.Println(appId)
 	userId := fmt.Sprintf("%d", uid)
 
@@ -120,11 +112,11 @@ func (b *BaseApi) GetPermissionToken(c *gin.Context) {
 		return
 	}
 
-	var appId uint32 = stringToUint32(global.GVA_CONFIG.System.AppID) // Zego派发的数字ID, 各个开发者的唯一标识
-	roomId := r.Roomid                                                // 房间 ID
-	userId := fmt.Sprintf("%d", uid)                                  // 用户 ID
-	serverSecret := global.GVA_CONFIG.System.ServerSecret             // 在获取 token 时进行 AES 加密的密钥
-	var effectiveTimeInSeconds int64 = 3600                           // token 的有效时长，单位：秒
+	var appId uint32 = utils.StringToUint32(global.GVA_CONFIG.System.AppID) // Zego派发的数字ID, 各个开发者的唯一标识
+	roomId := r.Roomid                                                      // 房间 ID
+	userId := fmt.Sprintf("%d", uid)                                        // 用户 ID
+	serverSecret := global.GVA_CONFIG.System.ServerSecret                   // 在获取 token 时进行 AES 加密的密钥
+	var effectiveTimeInSeconds int64 = 3600                                 // token 的有效时长，单位：秒
 	//请参考 github.com/zegoim/zego_server_assistant/token/go/src/token04/token04.go 定义
 	////权限位定义
 	//const (
@@ -239,7 +231,7 @@ func (b *BaseApi) HandleStripePaymentWebhook(c *gin.Context) {
 	}
 
 	// 替换为你的 Webhook Secret
-	endpointSecret := "whsec_Q9lhMsepl1vOrhxzvkLmAiggn3D08MR9"
+	endpointSecret := "whsec_nOtfoXI8AATMkICm2LaJpowozloVVK3E"
 
 	event, err := webhook.ConstructEvent(payload, c.GetHeader("Stripe-Signature"), endpointSecret)
 	if err != nil {

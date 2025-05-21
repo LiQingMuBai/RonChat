@@ -2,6 +2,7 @@ package utils
 
 import (
 	"github.com/shopspring/decimal"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -35,4 +36,12 @@ func GenerateOrderID(userId string) string {
 	// 4. 拼接时间 + 地址后4位
 	orderID := timestamp + userId
 	return orderID
+}
+func StringToUint32(input string) uint32 {
+	// First convert to uint64 to check for overflow
+	val, err := strconv.ParseUint(input, 10, 32)
+	if err != nil {
+		return 0
+	}
+	return uint32(val)
 }
