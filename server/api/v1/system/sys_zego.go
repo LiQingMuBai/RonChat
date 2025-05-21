@@ -205,6 +205,7 @@ func (b *BaseApi) CreateCheckoutSession(c *gin.Context) {
 	ronUserOrder.UserId = uid
 	ronUserOrder.Status = 0
 	ronUserOrder.OrderId = orderId
+	ronUserOrder.Uid = uid
 
 	err = ronUserOrderService.CreateRonUserOrder(c, &ronUserOrder)
 	if err != nil {
@@ -264,12 +265,15 @@ func (b *BaseApi) HandleStripePaymentWebhook(c *gin.Context) {
 		err = ronUserOrderService.UpdateRonUserOrderByOrderID(c, ronUserOrder)
 
 		//客户余额充值
-		var ronUsers system.RonUsers
 		_userId, _ := strconv.ParseUint(userID, 10, 64)
 		record, _ := ronUsersService.GetRonUsersByUID(c, _userId)
 		balance, _ := utils.AddDecimalStringsWithPrecision(record.Balance, ronUserOrder.Amount, 2)
-		record.Balance = balance
-		err = ronUsersService.UpdateRonUsers(c, ronUsers)
+
+		var ronUser system.RonUsers
+		ronUser.ID = record.ID
+		ronUser.Balance = balance
+
+		err = ronUsersService.UpdateRonUsers(c, ronUser)
 		if err != nil {
 			global.GVA_LOG.Error("更新失败!", zap.Error(err))
 			response.FailWithMessage("更新失败:"+err.Error(), c)
