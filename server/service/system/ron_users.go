@@ -43,6 +43,10 @@ func (ronUsersService *RonUsersService) GetRonUsers(ctx context.Context, id stri
 	err = global.GVA_DB.Where("id = ?", id).First(&ronUsers).Error
 	return
 }
+func (ronUsersService *RonUsersService) GetRonUsersByUID(ctx context.Context, uid uint64) (ronUsers system.RonUsers, err error) {
+	err = global.GVA_DB.Where("uid = ?", uid).First(&ronUsers).Error
+	return
+}
 
 // GetRonUsers 根据id获取ronUsers表记录
 // Author [yourname](https://github.com/yourname)

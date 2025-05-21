@@ -10,9 +10,14 @@ import (
 	systemRes "github.com/flipped-aurora/gin-vue-admin/server/model/system/response"
 	"github.com/flipped-aurora/gin-vue-admin/server/utils"
 	"github.com/gin-gonic/gin"
+	"github.com/stripe/stripe-go/v82"
+	"github.com/stripe/stripe-go/v82/paymentintent"
+	"github.com/stripe/stripe-go/v82/webhook"
 	"github.com/zegoim/zego_server_assistant/token/go/src/token04"
 	"go.uber.org/zap"
+	"io/ioutil"
 	"log"
+	"net/http"
 	"strconv"
 )
 
@@ -166,4 +171,156 @@ type RtcRoomPayLoad struct {
 	RoomId       string      `json:"room_id"`        //房间 id（必填）；用于对接口的房间 id 进行强验证
 	Privilege    map[int]int `json:"privilege"`      //权限位开关列表；用于对接口的操作权限进行强验证
 	StreamIdList []string    `json:"stream_id_list"` //流列表；用于对接口的流 id 进行强验证；允许为空，如果为空，则不对流 id 验证
+}
+
+func (b *BaseApi) CreateCheckoutSession(c *gin.Context) {
+	uid := utils.GetUserID(c)
+	userId := fmt.Sprintf("%d", uid)
+
+	orderId := utils.GenerateOrderID(userId)
+
+	var ronUserOrder system.RonUserOrder
+	err := c.ShouldBindJSON(&ronUserOrder)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
+	params := &stripe.PaymentIntentParams{
+		Amount:   stripe.Int64(2000), // 金额，单位为分（例如 20.00 USD）
+		Currency: stripe.String(string(stripe.CurrencyUSD)),
+		PaymentMethodTypes: stripe.StringSlice([]string{
+			"card",
+		}),
+
+		// 添加自定义参数
+		Metadata: map[string]string{
+			"user_id":  userId,
+			"order_id": orderId,
+			"env":      "sandbox",
+		},
+	}
+
+	pi, err := paymentintent.New(params)
+	if err != nil {
+		global.GVA_LOG.Error("创建支付意图失败", zap.Error(err))
+		response.FailWithMessage("创建支付意图失败", c)
+		return
+	}
+
+	//var ronUserOrder system.RonUserOrder
+
+	ronUserOrder.UserId = uid
+	ronUserOrder.Status = 0
+	ronUserOrder.OrderId = orderId
+
+	err = ronUserOrderService.CreateRonUserOrder(c, &ronUserOrder)
+	if err != nil {
+		global.GVA_LOG.Error("创建支付意图失败", zap.Error(err))
+		response.FailWithMessage("创建支付意图失败", c)
+		return
+	}
+
+	response.OkWithDetailed(systemRes.StripeResponse{
+		ClientSecret: pi.ClientSecret,
+	}, "创建支付意图成功", c)
+
+}
+
+// HandleWebhook 处理 Stripe Webhook 事件
+func (b *BaseApi) HandleStripePaymentWebhook(c *gin.Context) {
+	const MaxBodyBytes = int64(65536)
+	c.Request.Body = http.MaxBytesReader(c.Writer, c.Request.Body, MaxBodyBytes)
+	payload, err := ioutil.ReadAll(c.Request.Body)
+	if err != nil {
+		log.Printf("Failed to read request body: %v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to read request body"})
+		return
+	}
+
+	// 替换为你的 Webhook Secret
+	endpointSecret := "whsec_Q9lhMsepl1vOrhxzvkLmAiggn3D08MR9"
+
+	event, err := webhook.ConstructEvent(payload, c.GetHeader("Stripe-Signature"), endpointSecret)
+	if err != nil {
+		log.Printf("Webhook signature verification failed: %v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Webhook signature verification failed"})
+		return
+	}
+
+	// 处理不同的事件类型
+	switch event.Type {
+	case "payment_intent.succeeded":
+		// 提取 PaymentIntent 对象
+		var paymentIntent stripe.PaymentIntent
+		if err := json.Unmarshal(event.Data.Raw, &paymentIntent); err != nil {
+			log.Printf("Failed to parse payment intent: %v", err)
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to parse payment intent"})
+			return
+		}
+
+		// 获取 metadata 中的自定义参数
+		userID := paymentIntent.Metadata["user_id"]
+		orderID := paymentIntent.Metadata["order_id"]
+		env := paymentIntent.Metadata["env"]
+
+		log.Printf("Payment succeeded: user_id=%s, order_id=%s, env=%s", userID, orderID, env)
+		//订单完成
+		var ronUserOrder system.RonUserOrder
+		ronUserOrder.Status = 1
+		ronUserOrder.OrderId = orderID
+		err = ronUserOrderService.UpdateRonUserOrderByOrderID(c, ronUserOrder)
+
+		//客户余额充值
+		var ronUsers system.RonUsers
+		_userId, _ := strconv.ParseUint(userID, 10, 64)
+		record, _ := ronUsersService.GetRonUsersByUID(c, _userId)
+		balance, _ := utils.AddDecimalStringsWithPrecision(record.Balance, ronUserOrder.Amount, 2)
+		record.Balance = balance
+		err = ronUsersService.UpdateRonUsers(c, ronUsers)
+		if err != nil {
+			global.GVA_LOG.Error("更新失败!", zap.Error(err))
+			response.FailWithMessage("更新失败:"+err.Error(), c)
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"status":   "Payment succeeded",
+			"user_id":  userID,
+			"order_id": orderID,
+			"env":      env,
+		})
+
+	case "payment_intent.payment_failed":
+		// 提取 PaymentIntent 对象
+		var paymentIntent stripe.PaymentIntent
+		if err := json.Unmarshal(event.Data.Raw, &paymentIntent); err != nil {
+			log.Printf("Failed to parse payment intent: %v", err)
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to parse payment intent"})
+			return
+		}
+
+		// 获取 metadata 中的自定义参数
+		userID := paymentIntent.Metadata["user_id"]
+		orderID := paymentIntent.Metadata["order_id"]
+		env := paymentIntent.Metadata["env"]
+
+		log.Printf("Payment failed: user_id=%s, order_id=%s, env=%s", userID, orderID, env)
+
+		var ronUserOrder system.RonUserOrder
+		ronUserOrder.Status = 2
+		ronUserOrder.OrderId = orderID
+		err = ronUserOrderService.UpdateRonUserOrderByOrderID(c, ronUserOrder)
+
+		c.JSON(http.StatusOK, gin.H{
+			"status":   "Payment failed",
+			"user_id":  userID,
+			"order_id": orderID,
+			"env":      env,
+		})
+
+	default:
+		log.Printf("Unhandled event type: %s", event.Type)
+		c.JSON(http.StatusOK, gin.H{"status": "Unhandled event type"})
+	}
 }

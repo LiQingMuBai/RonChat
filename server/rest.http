@@ -1,5 +1,5 @@
 ### GET request with parameter
-POST http://107.189.19.170:8888/zego/login
+POST http://localhost:8888/zego/login
 Accept: application/json
 
 {
@@ -87,4 +87,10 @@ X-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVVUlEIjoiNTcwMDhhNzAtMmU1Ni00Mz
 
 
 
+
+
+### Send POST request with json body 创建支付意图
+POST http://localhost:8888/zego/create-checkout-session
+Content-Type: application/json
+X-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVVUlEIjoiN2Y4OGQ2N2QtZjE0My00Y2VhLTgxZjItY2IxZmIxYzI3YjMwIiwiSUQiOjcsIlVzZXJuYW1lIjoic3RldmVuMDAxIiwiTmlja05hbWUiOiJzdGV2ZW4wMDEiLCJBdXRob3JpdHlJZCI6OTk5LCJCdWZmZXJUaW1lIjo4NjQwMCwiaXNzIjoicW1QbHVzIiwiYXVkIjpbIkdWQSJdLCJleHAiOjE3NDg0NDU3ODEsIm5iZiI6MTc0Nzg0MDk4MX0.SKMnvqR8F5gi9iNVVko_1pygyp0KrOaNshtGWyk0Z5I
 

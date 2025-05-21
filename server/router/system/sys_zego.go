@@ -12,6 +12,9 @@ func (s *BaseRouter) InitBaseZEGORouter(Router *gin.RouterGroup) (R gin.IRoutes)
 		baseRouter.POST("getAuthToken", baseApi.GetAuthToken)
 		baseRouter.POST("login", baseApi.LoginRon)
 		baseRouter.POST("getPermissionToken", baseApi.GetPermissionToken)
+
+		baseRouter.POST("/create-checkout-session", baseApi.CreateCheckoutSession)
+		baseRouter.POST("/payment/callback", baseApi.HandleStripePaymentWebhook)
 	}
 	return baseRouter
 }

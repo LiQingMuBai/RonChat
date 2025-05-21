@@ -1,0 +1,38 @@
+package utils
+
+import (
+	"github.com/shopspring/decimal"
+	"strings"
+	"time"
+)
+
+func AddDecimalStringsWithPrecision(a, b string, precision int32) (string, error) {
+	num1, err := decimal.NewFromString(a)
+	if err != nil {
+		return "", err
+	}
+
+	num2, err := decimal.NewFromString(b)
+	if err != nil {
+		return "", err
+	}
+
+	result := num1.Add(num2)
+	return result.StringFixed(precision), nil
+}
+
+// GenerateTronOrderID 生成波场订单号（年月日时分 + 波场地址后4位）
+func GenerateOrderID(userId string) string {
+	// 1. 校验波场地址格式
+	userId = strings.TrimSpace(userId)
+	//if len(tronAddress) != 34 || !strings.HasPrefix(tronAddress, "T") {
+	//	return "", fmt.Errorf("无效的波场地址（必须34位且以T开头）")
+	//}
+
+	// 2. 获取当前时间的 "年月日时分"（格式：200601021504）
+	timestamp := time.Now().Format("200601021504")
+
+	// 4. 拼接时间 + 地址后4位
+	orderID := timestamp + userId
+	return orderID
+}

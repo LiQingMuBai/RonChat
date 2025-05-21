@@ -17,3 +17,6 @@ type LoginResponse struct {
 type ZEGOResponse struct {
 	Token string `json:"token"`
 }
+type StripeResponse struct {
+	ClientSecret string `json:"clientSecret"`
+}
