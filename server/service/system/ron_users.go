@@ -44,7 +44,7 @@ func (ronUsersService *RonUsersService) GetRonUsers(ctx context.Context, id stri
 	return
 }
 func (ronUsersService *RonUsersService) GetRonUsersByUID(ctx context.Context, uid uint64) (ronUsers system.RonUsers, err error) {
-	err = global.GVA_DB.Where("uid = ?", uid).First(&ronUsers).Error
+	err = global.GVA_DB.Where("user_id = ?", uid).First(&ronUsers).Error
 	return
 }
 
