@@ -115,6 +115,49 @@ func (ronUsersApi *RonUsersApi) UpdateRonUsers(c *gin.Context) {
 	}
 	response.OkWithMessage("更新成功", c)
 }
+func (ronUsersApi *RonUsersApi) CreateRoom(c *gin.Context) {
+	// 从ctx获取标准context进行业务行为
+	ctx := c.Request.Context()
+
+	var ronUsers system.RonUsers
+	err := c.ShouldBindJSON(&ronUsers)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
+	ronUsers.Enable = 1
+
+	err = ronUsersService.UpdateRonUsers(ctx, ronUsers)
+	if err != nil {
+		global.GVA_LOG.Error("更新失败!", zap.Error(err))
+		response.FailWithMessage("更新失败:"+err.Error(), c)
+		return
+	}
+	response.OkWithMessage("更新成功", c)
+}
+func (ronUsersApi *RonUsersApi) ExitRoom(c *gin.Context) {
+	// 从ctx获取标准context进行业务行为
+	ctx := c.Request.Context()
+
+	var ronUsers system.RonUsers
+	err := c.ShouldBindJSON(&ronUsers)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
+	ronUsers.Enable = 0
+	ronUsers.StreamId = ""
+
+	err = ronUsersService.UpdateRonUsers(ctx, ronUsers)
+	if err != nil {
+		global.GVA_LOG.Error("更新失败!", zap.Error(err))
+		response.FailWithMessage("更新失败:"+err.Error(), c)
+		return
+	}
+	response.OkWithMessage("更新成功", c)
+}
 
 // FindRonUsers 用id查询ronUsers表
 // @Tags RonUsers
@@ -185,7 +228,7 @@ func (ronUsersApi *RonUsersApi) GetLuckyGuy(c *gin.Context) {
 		response.FailWithMessage("当前用户缺少:"+err.Error(), c)
 		return
 	}
-	
+
 	if max <= 1 {
 		global.GVA_LOG.Error("当前用户缺少!", zap.Error(err))
 		response.OkWithCode(c)
